@@ -52,13 +52,13 @@ adminRouter.post("/signup", async (req, res) => {
 adminRouter.post("/login", async (req, res) => {
     const { email, password } = req.body;
     // first check only email if exists in database
-    const findAdmin = await UserModel.findOne({
+    const findAdmin = await AdminModel.findOne({
         email: email,
     });
 
-    if (!findUser) {
+    if (!findAdmin) {
         res.status(403).json({
-            message: "User Not found with this mail",
+            message: "Admin Not found with this mail",
         });
         return;
     }

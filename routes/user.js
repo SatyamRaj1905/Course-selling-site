@@ -10,7 +10,6 @@ const saltRounds = 5
 
 // let errorThrown = false;
 userRouter.post("/signup", async (req, res) => {
-
     
     // Input / ZOD validation
     const requireBody = z.object({
