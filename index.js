@@ -6,9 +6,7 @@ const { adminRouter } = require("./routes/admin")
 
 const app = express()
 
-
 app.use(express.json())
-
 
 // using Routing in express concept
 app.use("/user", userRouter)
