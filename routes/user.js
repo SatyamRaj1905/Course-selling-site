@@ -3,9 +3,9 @@ const { UserModel } = require("../db")
 const { z } = require("zod")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
+const { JWT_SECRET_USER } = require("../config")
 
 const userRouter = Router();
-const JWT_SECRET_USER = "satyamisgreat"
 const saltRounds = 5
 
 // let errorThrown = false;

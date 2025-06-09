@@ -3,9 +3,12 @@ const { AdminModel } = require("../db");
 const { z } = require("zod")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt");
+const { JWT_SECRET_ADMIN } = require("../config");
+const { adminMiddleware } = require("../middleware/adminAuth");
+const course = require("./course");
+
 
 const adminRouter = Router();
-const JWT_SECRET_ADMIN = "Adminisgreat"
 const saltRounds = 5;
 
 adminRouter.post("/signup", async (req, res) => {
@@ -86,11 +89,34 @@ adminRouter.post("/login", async (req, res) => {
     }
 });
 
-adminRouter.post("/create", (req, res) => {
+adminRouter.post("/create",adminMiddleware, async (req, res) => {
+
+    const adminId = req.userId;
+
+    const { title, description, imageUrl, price} = req.body
+
+    const create = await CourseModel.create({
+        title : title,
+        description : description,
+        price : price,
+        imageUrl : imageUrl,
+        creatorId : adminId
+    })
+
+    res.json({
+        message : " Course Created ",
+        courseId :   course._id
+    })
 
 });
 
-adminRouter.put("/course", (req, res) => {});
+adminRouter.put("/update", (req, res) => {
+    const adminId = req.userId
+
+    const { title, description, imageUrl, price} = req.body
+
+    
+});
 
 adminRouter.get("/course/bulk", (req, res) => {});
 
