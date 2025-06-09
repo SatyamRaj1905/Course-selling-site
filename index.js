@@ -1,12 +1,11 @@
 const express = require("express")
-const jwt = require("jsonwebtoken")
 const mongoose = require("mongoose")
 const { userRouter } = require("./routes/user")
 const { courseRouter } = require("./routes/course")
 const { adminRouter } = require("./routes/admin")
 
 const app = express()
-const JWT_SECRET = "satyamisgreat"
+
 
 app.use(express.json())
 

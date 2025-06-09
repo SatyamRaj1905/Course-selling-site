@@ -1,9 +1,11 @@
 const { Router } = require("express")
 const { UserModel } = require("../db")
 const { z } = require("zod")
+const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
 
 const userRouter = Router();
+const JWT_SECRET_USER = "satyamisgreat"
 const saltRounds = 5
 
 // let errorThrown = false;
@@ -52,9 +54,39 @@ userRouter.post("/signup", async (req, res) => {
     });   
 });
 
-userRouter.post("/login", (req, res) => {
+userRouter.post("/login", async (req, res) => {
 
+    const {email, password} = req.body
+    // first check only email if exists in database
+    const findUser = await UserModel.findOne({
+        email : email
+    })
 
+    if(!findUser){
+        res.status(403).json({
+            message : "User Not found with this mail"
+        })
+        return
+    }
+
+    // Now checking password exists or not
+    const passwordCheck = await bcrypt.compare(password, findUser.password)
+    if(passwordCheck){
+        const token = jwt.sign({
+            id : findUser._id
+        }, JWT_SECRET_USER)
+
+        res.status(200).send({
+            token : token,
+            message : " You are Logged in "
+        })
+        return      
+    }else{
+        res.status(403).json({
+            message : " Incorrect Credentials "
+        })
+        return
+    }
 })
 
 userRouter.get("/purchases", (req, res) => {
