@@ -7,7 +7,7 @@ const userSchema = new Schema({
     email : {type : String, unique : true},
     password : String,
     firstName : String,
-    lastName : String,
+    lastName : String
 });
 
 const courseSchema = new Schema({
@@ -22,12 +22,12 @@ const adminSchema = new Schema({
     email : {type : String, unique : true},
     password : String,
     firstName : String,
-    lastName : String,
+    lastName : String
 })
 
 const purchaseSchema = new Schema({
-    courseid : ObjectId,
-    userId : ObjectId,
+    courseId : ObjectId,
+    userId : ObjectId
 })
 
 const UserModel = mongoose.model("user", userSchema)

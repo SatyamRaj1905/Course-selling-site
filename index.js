@@ -16,14 +16,13 @@ app.use("/course", courseRouter)
 
 async function main(){
     try {
-        await mongoose.connect("process.env.MONGO_URI")
+        await mongoose.connect(process.env.MONGO_URI)
         app.listen(3000)
         console.log("Port listening")
         
     } catch (error) {
         console.log("Failed to connect to database",error);
-    }
-    
+    }   
 }
 
 main()
