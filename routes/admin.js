@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const { JWT_SECRET_ADMIN } = require("../config");
 const { adminMiddleware } = require("../middleware/adminAuth");
 const course = require("./course");
+const { CourseModel } = require("../db")
 
 
 const adminRouter = Router();
@@ -105,20 +106,47 @@ adminRouter.post("/create",adminMiddleware, async (req, res) => {
 
     res.json({
         message : " Course Created ",
-        courseId :   course._id
+        courseId : create._id
     })
 
 });
 
-adminRouter.put("/update", (req, res) => {
+adminRouter.put("/update",adminMiddleware,async (req, res) => {
     const adminId = req.userId
 
-    const { title, description, imageUrl, price} = req.body
+    const { title, description, imageUrl, price, courseId} = req.body
 
-    
+    const update = CourseModel.updateOne({
+        _id : courseId,
+        creatorId : adminId
+    }, {
+        title : title,
+        description : description,
+        imageUrl : imageUrl,
+        price : price
+    })
+
+    res.status(200).json({
+        message : " Course Updated ",
+        courseId : update._id
+    })
+
+
 });
 
-adminRouter.get("/course/bulk", (req, res) => {});
+adminRouter.get("/course/bulk",adminMiddleware, async (req, res) => {
+    const adminId = req.userId
+
+    const course = await CourseModel.find({
+        creatorId : adminId  // first find the creatorId with this adminId NOT USEF findOne as it will give only the one value but the find will give all the value
+    })
+
+    res.json({
+        message : " Here is the course ",
+        course
+    })
+
+});
 
 module.exports = {
     adminRouter: adminRouter,
