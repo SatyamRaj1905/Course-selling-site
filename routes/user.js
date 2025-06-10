@@ -1,9 +1,10 @@
 const { Router } = require("express")
-const { UserModel } = require("../db")
+const { UserModel, PurchaseModel, CourseModel } = require("../db")
 const { z } = require("zod")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
 const { JWT_SECRET_USER } = require("../config")
+const { userMiddleware } = require("../middleware/userAuth")
 
 const userRouter = Router();
 const saltRounds = 5
@@ -88,8 +89,22 @@ userRouter.post("/login", async (req, res) => {
     }
 })
 
-userRouter.get("/purchases", (req, res) => {
+userRouter.get("/purchases",userMiddleware, async (req, res) => {
+    const userId = req.userId 
 
+    const purchases = await PurchaseModel.find({
+        userId : userId
+    })
+
+    // to get all the data associated with this as // 2 line se bas id's aayega course ka data nhi aayega
+    const courseData = await CourseModel.find({
+        _id : { $in : purchases.map(x => x.courseId)} // with the help of _id find / map all the data assciated with courseId
+    })
+  
+    res.json({ 
+        purchases, // 2
+        courseData
+    })
 })
 
 module.exports = {
